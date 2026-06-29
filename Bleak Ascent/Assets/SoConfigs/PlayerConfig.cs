@@ -24,7 +24,7 @@ namespace SoConfigs
     [Serializable]
     public class AttackConfig
     {
-        public float attackDamage;
+        public int attackDamage;
         public float cooldown;
         public float castTime;
         public string attackAnimationName;
@@ -35,9 +35,10 @@ namespace SoConfigs
     {
         public GameObject spellPrefab;
         public float spellDamage;
+        public float spellRadius;
         public float cooldown;
-        public float castTime;
         public string spellAnimationName;
+        public float castDelay;
         public List<SpellColor> spellColorVariations;
     }
 

@@ -9,12 +9,12 @@ namespace Player.MoveSystem
         [SerializeField] private Rigidbody2D rb2D;
 
         private MoveConfig _moveConfig;
-        private StateController _stateController;
+        private IMoveState _stateController;
         private bool _isInitialized = false;
 
         private Vector2 _moveDirection = Vector2.zero;
         
-        public void Initialize(MoveConfig moveConfig, StateController stateController)
+        public void Initialize(MoveConfig moveConfig, IMoveState stateController)
         {
             _moveConfig = moveConfig;
             _stateController = stateController;
@@ -25,7 +25,7 @@ namespace Player.MoveSystem
         // Update is called once per frame
         private void Update()
         {
-            if (!_isInitialized || _stateController.IsUIVisible)
+            if (!_isInitialized || _stateController.CanMove())
                 return;
             
             Move();
@@ -41,7 +41,7 @@ namespace Player.MoveSystem
             var currentSpeed = Input.GetKeyDown(KeyCode.LeftShift) ? _moveConfig.runSpeed : _moveConfig.speed;
             var speed = currentSpeed * Time.deltaTime;
 
-            if (_stateController.IsAttack)
+            if (_stateController.IsAttacking)
                 speed *= _moveConfig.attackSlowMultiplier;
             
             _moveDirection = new Vector2(x, y).normalized * speed;

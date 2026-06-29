@@ -1,11 +1,18 @@
 namespace Player.Services
 {
-    public class StateController 
+    public class StateController : IMoveState, IAttackState
     {
-        public bool IsUIVisible { get; private set; }
-        public bool IsAttacking { get; private set; }
+        private bool _isUIVisible;
+        private bool _isAttacking;
+        private bool _isRolling;
         
-        public void SetUIVisibility(bool isVisible) => IsUIVisible = isVisible;
-        public void SetAttack(bool isAttack) => IsAttacking = isAttack;
+        public bool IsAttacking => _isAttacking;
+        
+        public void SetUIVisibility(bool isVisible) => _isUIVisible = isVisible;
+        public void SetAttack(bool isAttack) => _isAttacking = isAttack;
+        
+        public bool CanAttack() => !_isUIVisible && !_isAttacking;
+  
+        public bool CanMove() => !_isUIVisible;
     }
 }
