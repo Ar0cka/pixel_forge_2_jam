@@ -1,5 +1,7 @@
+using System.Collections;
 using Player.AttackSystem.Abstraction;
 using SoConfigs;
+using Spell;
 using UnityEngine;
 
 namespace Player.AttackSystem.CastSpellSystem
@@ -14,18 +16,20 @@ namespace Player.AttackSystem.CastSpellSystem
             Info.StateController.SetAttack(true);
             
             Info.Animator.SetTrigger(Config.spellAnimationName);
-            var animationDelay = Config.castDelay;
 
-            while (animationDelay > 0)
-            {
-                animationDelay -= Time.deltaTime;
-            }
+            StartCoroutine(Spawn(Config.castDelay));
+        }
 
+        private IEnumerator Spawn(float animationDelay)
+        {
+            yield return new WaitForSeconds(animationDelay);
+            
             var spellPrefab = Info.PrefabFactory.CreateSpell(Config.spellPrefab, Info.StartSpellPoint.position);
-            //TODO set spell color to spell prefab
+            var spellLogic = spellPrefab.GetComponent<SpellLogic>();
+            spellLogic.Initialize(Config, Info.LayersToAttack);
             
             Info.StateController.SetAttack(false);
-            
+            CooldownTime = Config.cooldown;
         }
     }
 }

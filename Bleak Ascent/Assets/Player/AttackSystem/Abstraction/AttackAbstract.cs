@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Player.AttackSystem.Abstraction
 {
-    public abstract class AttackAbstract<TConfig, TInfo> where TInfo : AttackInfo
+    public abstract class AttackAbstract<TConfig, TInfo> : MonoBehaviour where TInfo : AttackInfo
     {
         protected float CooldownTime;
         public float Cooldown => CooldownTime;
@@ -15,6 +15,8 @@ namespace Player.AttackSystem.Abstraction
         {
             Config = config;
             Info = info;
+
+            CooldownTime = 0f;
         }
 
         public abstract void Execute();

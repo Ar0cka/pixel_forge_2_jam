@@ -7,10 +7,12 @@ namespace Player.MoveSystem
     public class PlayerMove : MonoBehaviour
     {
         [SerializeField] private Rigidbody2D rb2D;
+        [SerializeField] private Animator animator;
+        [SerializeField] private SpriteRenderer spriteRenderer;
 
         private MoveConfig _moveConfig;
         private IMoveState _stateController;
-        private bool _isInitialized = false;
+        private bool _isInitialized;
 
         private Vector2 _moveDirection = Vector2.zero;
         
@@ -23,9 +25,9 @@ namespace Player.MoveSystem
         }
         
         // Update is called once per frame
-        private void Update()
+        private void FixedUpdate()
         {
-            if (!_isInitialized || _stateController.CanMove())
+            if (!_isInitialized || !_stateController.CanMove())
                 return;
             
             Move();
@@ -36,13 +38,23 @@ namespace Player.MoveSystem
             float x = Input.GetAxis("Horizontal");
             float y = Input.GetAxis("Vertical");
             
-            if (x == 0 && y == 0) return;
+            if (x == 0 && y == 0)
+            {
+                animator.SetBool("IsWalk", false);
+                return;
+            }
             
-            var currentSpeed = Input.GetKeyDown(KeyCode.LeftShift) ? _moveConfig.runSpeed : _moveConfig.speed;
-            var speed = currentSpeed * Time.deltaTime;
+            var currentSpeed = Input.GetKey(KeyCode.LeftShift) ? _moveConfig.runSpeed : _moveConfig.speed;
+            var speed = currentSpeed * Time.fixedDeltaTime;
 
             if (_stateController.IsAttacking)
                 speed *= _moveConfig.attackSlowMultiplier;
+            
+            animator.SetFloat("X", x);
+            animator.SetFloat("Y", y);
+            animator.SetBool("IsWalk", true);
+            
+            spriteRenderer.flipX = x < 0;
             
             _moveDirection = new Vector2(x, y).normalized * speed;
             rb2D.MovePosition(rb2D.position + _moveDirection);

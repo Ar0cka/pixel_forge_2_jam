@@ -1,5 +1,6 @@
 using System;
-using Player.HealthSystem;
+using Core.HealthSystem;
+using DG.Tweening;
 using SoConfigs;
 using UnityEngine;
 
@@ -9,7 +10,10 @@ namespace Spell
     {
         [SerializeField] private float spellDamageDelay = 0.5f;
         [SerializeField] private float spellLifeTime = 10f;
+        [SerializeField] private float rotatePerSec = 2f;
 
+        [SerializeField] private PlayerConfig _playerConfig;
+        
         private SpellConfig _spellConfig;
         private LayerMask _layerMask;
         private bool _isSpellActive;
@@ -17,6 +21,13 @@ namespace Spell
         private float _delayTimer;
         private float _lifeTimeTimer;
         
+        private Tween _rotateTween;
+
+        private void Awake()
+        {
+            Initialize(_playerConfig.spellConfig, LayerMask.GetMask("Units"));
+        }
+
         public void Initialize(SpellConfig spellConfig, LayerMask layerMask)
         {
             _spellConfig = spellConfig;
@@ -24,6 +35,7 @@ namespace Spell
             
             _lifeTimeTimer = spellLifeTime;
             
+            SetAnimation();
             _isSpellActive = true;
         }
 
@@ -32,12 +44,13 @@ namespace Spell
             if (!_isSpellActive)
                 return;
             
-            _lifeTimeTimer += Time.deltaTime;
+            _lifeTimeTimer -= Time.deltaTime;
 
             if (_lifeTimeTimer <= 0)
             {
                 _isSpellActive = false;
-                Destroy(this.gameObject);
+                _rotateTween?.Kill();
+                Destroy(gameObject);
                 return;
             }
 
@@ -70,6 +83,17 @@ namespace Spell
             }
 
             _delayTimer = spellDamageDelay;
+        }
+
+        private void SetAnimation()
+        {
+            _rotateTween?.Kill();
+
+            var duration = 360 / rotatePerSec;
+            
+            _rotateTween = transform.DORotate(new Vector3(0, 0, 360), duration, RotateMode.FastBeyond360)
+                .SetEase(Ease.Linear)
+                .SetLoops(-1, LoopType.Incremental);
         }
 
 #if UNITY_EDITOR

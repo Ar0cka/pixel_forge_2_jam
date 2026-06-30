@@ -8,7 +8,7 @@ namespace Player.AttackSystem.CastSpellSystem
         
         public GameObject CreateSpell(GameObject prefab, Vector2 startPosition)
         {
-            var spell = Instantiate(prefab, _prefabParent, true);
+            var spell = Instantiate(prefab, _prefabParent, false);
             spell.transform.position = startPosition;
             return spell;
         }

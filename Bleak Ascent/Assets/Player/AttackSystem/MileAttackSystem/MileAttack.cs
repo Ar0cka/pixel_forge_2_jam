@@ -1,9 +1,10 @@
+using System.Collections;
+using Core.HealthSystem;
 using Player.AttackSystem.Abstraction;
-using Player.HealthSystem;
 using SoConfigs;
 using UnityEngine;
 
-namespace Player.AttackSystem
+namespace Player.AttackSystem.MileAttackSystem
 {
     public class MileAttack : AttackAbstract<AttackConfig, MileAttackInfo>
     {
@@ -13,13 +14,17 @@ namespace Player.AttackSystem
             if (!Info.StateController.CanAttack() || !CanExecute())
                 return;
 
-            var attackDelay = Config.castTime;
+            Info.StateController.SetAttack(true);
+            Info.Animator.SetTrigger(Config.attackAnimationName);
+            
+            StartCoroutine(Attack(Config.castTime));
+        }
 
-            while (attackDelay > 0)
-            {
-                attackDelay -= Time.deltaTime;
-            }
 
+        private IEnumerator Attack(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            
             var results = new Collider2D[32];
             
             var size = Physics2D.OverlapCircleNonAlloc(Info.AttackPoint.position, Config.attackDamage, results, Info.LayersToAttack);
@@ -41,6 +46,5 @@ namespace Player.AttackSystem
             Info.Animator.ResetTrigger(Config.attackAnimationName);
             CooldownTime = Config.cooldown;
         }
-        
     }
 }

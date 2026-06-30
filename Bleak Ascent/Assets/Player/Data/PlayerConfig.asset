@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2e6c7ff3b4e4742b21fe2a1fc4aab82, type: 3}
+  m_Name: PlayerConfig
+  m_EditorClassIdentifier: 
+  moveConfig:
+    speed: 4
+    runSpeed: 7
+    attackSlowMultiplier: 0.6
+    acceleration: 0
+  attackConfig:
+    attackDamage: 5
+    cooldown: 0.3
+    castTime: 0.6
+    attackAnimationName: IsAttack
+  spellConfig:
+    spellPrefab: {fileID: 982107302156492241, guid: 5148af273c13d9c6abe54f3bd35a6a2b, type: 3}
+    spellDamage: 5
+    spellRadius: 1
+    cooldown: 2
+    spellAnimationName: IsCast
+    castDelay: 1
+    spellColorVariations: []

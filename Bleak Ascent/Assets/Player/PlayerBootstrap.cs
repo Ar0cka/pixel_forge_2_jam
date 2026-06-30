@@ -1,4 +1,5 @@
 using System;
+using Player.AttackSystem;
 using Player.MoveSystem;
 using Player.Services;
 using SoConfigs;
@@ -9,6 +10,7 @@ namespace Player
     public class PlayerBootstrap : MonoBehaviour
     {
         [SerializeField] private PlayerMove move;
+        [SerializeField] private AttackController attackController;
         [SerializeField] private PlayerConfig config;
 
         private StateController _stateController;
@@ -18,6 +20,7 @@ namespace Player
             _stateController = new StateController();
             
             move.Initialize(config.moveConfig, _stateController);
+            attackController.Initialize(_stateController, config);
         }
     }
 }
